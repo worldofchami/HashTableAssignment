@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.List;
 /**
  * Simple hash table implementation using linear probing.
@@ -6,7 +7,6 @@ import java.util.List;
  * @version 24/4/2015
  */
 public class LPHashTable extends HashTable {
-
     /**
      * Create an LPHashTable with DEFAULT_SIZE table.
      */
@@ -25,5 +25,17 @@ public class LPHashTable extends HashTable {
      */
     protected int findIndex(String key) {
 		// Implement using linear probing.
+		int hashCode = hashFunction(key);
+		String[] hashTable = this.table;
+
+		int counter = 0;
+		while(hashTable[counter] != null && counter < this.tableSize()) {
+			if(hashTable[counter].equalsIgnoreCase(key))
+				return hashCode;
+
+			counter = (counter + 1) % this.tableSize();
+		}
+
+		return -1;
     }
 }

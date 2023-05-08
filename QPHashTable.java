@@ -25,5 +25,6 @@ public class QPHashTable  extends HashTable {
      */
     protected int findIndex(String key) {
 		// Implement using quadratic probing.
+		
     }
 }
