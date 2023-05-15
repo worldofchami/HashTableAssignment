@@ -32,8 +32,6 @@ public class QPHashTable extends HashTable {
 		int hashCode = this.hashFunction(key);
 		String[] table = this.table;
 
-		this.incProbeCount();
-
 		int offset = 1;
 		while(table[hashCode] != null)
 		{			
@@ -44,7 +42,7 @@ public class QPHashTable extends HashTable {
 				if(table[hashCode].equalsIgnoreCase(key))
 					return hashCode;
 
-				hashCode = (hashCode + (offset*offset)) % this.tableSize();
+				hashCode = (hashFunction(key) + (offset*offset)) % this.tableSize();
 				offset++;
 			}
 
@@ -52,6 +50,8 @@ public class QPHashTable extends HashTable {
 				return -1;
 		}
 
+		this.incProbeCount();
+		
 		return hashCode;
 	}
 }

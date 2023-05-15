@@ -45,7 +45,7 @@ public class LPHashTable extends HashTable {
 				if(table[hashCode].equalsIgnoreCase(key))
 					return hashCode;
 
-				hashCode = (hashCode + 1) % this.tableSize();
+				hashCode = (hashFunction(key) + 1) % this.tableSize();
 			}
 
 			else
