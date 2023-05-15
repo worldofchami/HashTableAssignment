@@ -1,4 +1,5 @@
 import java.io.File;
+import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -9,26 +10,15 @@ public class Optimize
         try
         {
             LPHashTable hashTable = new LPHashTable(37);
-            LPHashTable tempHashTable = new LPHashTable(37);
-            int[][] weights = {
-                {0, 1, 2, 3, 4, 3, 2, 1, 0},
-                {1, 2, 3, 4, 1, 2, 3, 4, 1},
-                {2, 3, 4, 0, 1, 2, 3, 4, 0},
-                {3, 4, 0, 1, 2, 3, 4, 0, 1},
-                {4, 1, 2, 3, 4, 3, 2, 1, 0},
-                {0, 1, 2, 3, 4, 0, 1, 2, 3},
-                {1, 2, 3, 4, 3, 2, 1, 0, 4},
-                {2, 3, 4, 3, 2, 1, 0, 1, 2},
-                {3, 4, 3, 2, 1, 0, 1, 2, 3},
-            };
+            int[][] weights = getCombinations();
 
             ArrayList<Integer> probes = new ArrayList<Integer>();
 
             // For each combination of weights
             for(int i = 0; i < weights.length; i++)
             {
-                tempHashTable.empty();
-                tempHashTable.setWeights(weights[i]);
+                hashTable.empty();
+                hashTable.setWeights(weights[i]);
 
                 Scanner scFile = new Scanner(new File("mydata.txt"));
 
@@ -38,11 +28,11 @@ public class Optimize
                 {
                     String username = scFile.nextLine();
 
-                    tempHashTable.insert(username);
+                    hashTable.insert(username);
 
-                    sumProbes += tempHashTable.getProbeCount();
+                    sumProbes += hashTable.getProbeCount();
 
-                    tempHashTable.resetProbeCount();
+                    hashTable.resetProbeCount();
                 }
 
                 probes.add(sumProbes);
@@ -50,10 +40,14 @@ public class Optimize
                 scFile.close();
             }
 
-            System.out.println(probes);
-
             int minimum = min(probes);
-            System.out.println(String.format("%d %d", minimum, occurences(minimum, probes)));
+
+            File file = new File("results.txt");
+            FileWriter fileWriter = new FileWriter(file);
+
+            fileWriter.write(String.format("%d %d", minimum, occurences(minimum, probes)));
+
+            fileWriter.close();
         }   
         
         catch(Exception e)
@@ -82,5 +76,21 @@ public class Optimize
                 count++;
 
         return count;
+    }
+
+    private static int[][] getCombinations()
+    {
+        int numCombinations = (int) Math.pow(5, 9);
+        int [][] weights = new int[numCombinations][9];
+
+        for (int i = 0; i < numCombinations; i++) {
+            int value = i;
+            for (int j = 8; j >= 0; j--) {
+                weights[i][j] = value % 5;
+                value /= 5;
+            }
+        }
+
+        return weights;
     }
 }
